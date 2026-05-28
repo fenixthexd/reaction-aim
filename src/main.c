@@ -73,6 +73,8 @@ int calculate_score(GameState *game)
 // -- Entry point --
 int main(int argc, char *argv[])
 {
+    ChangeDirectory(GetApplicationDirectory());
+    
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Reaction Aim");
     SetTargetFPS(60);
 
