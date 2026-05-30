@@ -19,4 +19,7 @@
 #define MIN_SPAWN_TIME 1.0f
 #define MAX_SPAWN_TIME 5.0f
 
+#define STREAK_ROW_SIZE 10
+#define KILL_RADIUS 5
+
 #endif

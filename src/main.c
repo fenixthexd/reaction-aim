@@ -62,10 +62,10 @@ Vector2 get_random_edge()
 
 int calculate_score(GameState *game)
 {
-    float time_mult = fmax(0, MAX_SCORE_TIME - game->enemy.lifetime);
-    float speed_mult = game->enemy.speed / 120.0;
+    float time_multiplier = fmax(0, MAX_SCORE_TIME - game->enemy.lifetime);
+    float speed_multiplier = game->enemy.speed / 120.0;
 
-    int total_bonus = (int)floor(BASE_SCORE_GAIN * time_mult * speed_mult);
+    int total_bonus = (int)floor(BASE_SCORE_GAIN * time_multiplier * speed_multiplier);
     
     return BASE_SCORE_GAIN + total_bonus;
 }
@@ -87,12 +87,12 @@ int main(int argc, char *argv[])
     reset_game(&game, true);
 
     while (!WindowShouldClose()) {
-        float dt = GetFrameTime();
+        float delta_time = GetFrameTime();
 
-        Vector2 mouse_pos = GetMousePosition();
-        Vector2 mouse_dir = Vector2Normalize(Vector2Subtract(mouse_pos, center_position));
+        Vector2 mouse_position = GetMousePosition();
+        Vector2 mouse_direction = Vector2Normalize(Vector2Subtract(mouse_position, center_position));
 
-        Vector2 laser_end = Vector2Add(center_position, Vector2Scale(mouse_dir, LASER_LENGTH));
+        Vector2 laser_end = Vector2Add(center_position, Vector2Scale(mouse_direction, LASER_LENGTH));
 
         if (game.elapsed_time > game.spawn_at && !game.enemy.spawned)
         {
@@ -103,9 +103,12 @@ int main(int argc, char *argv[])
 
         if (game.enemy.spawned)
         {
-            game.enemy.position = Vector2Add(game.enemy.position, Vector2Scale(game.enemy.direction, game.enemy.speed * dt));
+            game.enemy.position = Vector2Add(
+                game.enemy.position,
+                Vector2Scale(game.enemy.direction, game.enemy.speed * delta_time)
+            );
 
-            if (Vector2Distance(game.enemy.position, center_position) < 10)
+            if (Vector2Distance(game.enemy.position, center_position) < KILL_RADIUS)
             {
                 reset_game(&game, true);
 
@@ -123,7 +126,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                game.enemy.lifetime += dt;
+                game.enemy.lifetime += delta_time;
             }
         }
 
@@ -145,8 +148,8 @@ int main(int argc, char *argv[])
         for (int i = 0; i < game.streaks; i++)
         {
             DrawRectangle(
-                WINDOW_WIDTH - 20 - (15 * (i % 8)),
-                10 + (15 * (i / 8)),
+                WINDOW_WIDTH - 20 - (15 * (i % STREAK_ROW_SIZE)),
+                10 + (15 * (i / STREAK_ROW_SIZE)),
                 10,
                 10,
                 ORANGE
@@ -156,7 +159,7 @@ int main(int argc, char *argv[])
 
         EndDrawing();
 
-        game.elapsed_time += dt;
+        game.elapsed_time += delta_time;
     }
 
     CloseAudioDevice();
