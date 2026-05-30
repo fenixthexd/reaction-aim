@@ -11,7 +11,7 @@ typedef struct
     Vector2 position;
     Vector2 direction;
     float speed;
-    double spawn_time;
+    float lifetime;
 } Enemy;
 
 typedef struct 
@@ -19,8 +19,8 @@ typedef struct
     Enemy enemy;
     int score;
     int streaks;
-    int frame_count;
-    int spawn_check;
+    float elapsed_time;
+    float spawn_at;
 } GameState;
 
 // -- Helper functions --
@@ -29,9 +29,10 @@ void reset_game(GameState *game, bool game_over)
     game->enemy.spawned = false;
     game->enemy.position = Vector2Zero();
     game->enemy.direction = Vector2Zero();
+    game->enemy.lifetime = 0.0f;
 
-    game->frame_count = 0;
-    game->spawn_check = GetRandomValue(MIN_SPAWN_FRAMES, MAX_SPAWN_FRAMES);
+    game->elapsed_time = 0.0f;
+    game->spawn_at = GetRandomValue(MIN_SPAWN_TIME * 10, MAX_SPAWN_TIME * 10) / 10.0f;
     
     if (game_over)
     {
@@ -61,9 +62,8 @@ Vector2 get_random_edge()
 
 int calculate_score(GameState *game)
 {
-    double reaction_time = GetTime() - game->enemy.spawn_time;
-    double time_mult = fmax(0, MAX_SCORE_TIME - reaction_time);
-    double speed_mult = game->enemy.speed / 2.0;
+    float time_mult = fmax(0, MAX_SCORE_TIME - game->enemy.lifetime);
+    float speed_mult = game->enemy.speed / 120.0;
 
     int total_bonus = (int)floor(BASE_SCORE_GAIN * time_mult * speed_mult);
     
@@ -76,8 +76,6 @@ int main(int argc, char *argv[])
     ChangeDirectory(GetApplicationDirectory());
     
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Reaction Aim");
-    SetTargetFPS(60);
-
     InitAudioDevice();
 
     Sound hit_sfx = LoadSound("assets/sfx/hit.ogg");
@@ -89,39 +87,43 @@ int main(int argc, char *argv[])
     reset_game(&game, true);
 
     while (!WindowShouldClose()) {
+        float dt = GetFrameTime();
+
         Vector2 mouse_pos = GetMousePosition();
         Vector2 mouse_dir = Vector2Normalize(Vector2Subtract(mouse_pos, center_position));
 
         Vector2 laser_end = Vector2Add(center_position, Vector2Scale(mouse_dir, LASER_LENGTH));
 
-        if (game.frame_count > game.spawn_check && !game.enemy.spawned)
+        if (game.elapsed_time > game.spawn_at && !game.enemy.spawned)
         {
             game.enemy.spawned = true;
             game.enemy.position = get_random_edge();
             game.enemy.direction = Vector2Normalize(Vector2Subtract(center_position, game.enemy.position));
-            game.enemy.spawn_time = GetTime();
         }
 
         if (game.enemy.spawned)
         {
-            game.enemy.position = Vector2Add(game.enemy.position, Vector2Scale(game.enemy.direction, game.enemy.speed));
-            
+            game.enemy.position = Vector2Add(game.enemy.position, Vector2Scale(game.enemy.direction, game.enemy.speed * dt));
+
             if (Vector2Distance(game.enemy.position, center_position) < 10)
             {
                 reset_game(&game, true);
 
                 PlaySound(over_sfx);
             }
-
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)
+            else if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)
                 && CheckCollisionCircleLine(game.enemy.position, ENEMY_COL_RADIUS, center_position, laser_end))
             {
-                reset_game(&game, false);
-                game.enemy.speed += ENEMY_SPEED_GAIN;
                 game.score += calculate_score(&game);
+                game.enemy.speed += ENEMY_SPEED_GAIN;
                 game.streaks++;
+                reset_game(&game, false);
 
                 PlaySound(hit_sfx);
+            }
+            else
+            {
+                game.enemy.lifetime += dt;
             }
         }
 
@@ -154,7 +156,7 @@ int main(int argc, char *argv[])
 
         EndDrawing();
 
-        game.frame_count++;
+        game.elapsed_time += dt;
     }
 
     CloseAudioDevice();
