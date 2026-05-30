@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(reaction_aim)
 
-set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
 include(FetchContent)
 
 FetchContent_Declare(
