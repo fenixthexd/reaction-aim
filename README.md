@@ -2,7 +2,7 @@
 Reaction Aim is a minimalist arcade game and reaction trainer made with raylib. I do not intend it as an advance tool as this is just a side project of mine.
 
 ## Installation
-You can download pre-built binaries from the [releases page](https://github.com/fenixthexd/reaction-aim/releases). Alternatively, you can build it yourself if you want to make changes.
+You can download pre-built binaries from the [itch.io page](https://fenixthexd.itch.io/reaction-aim). Alternatively, you can build it yourself if you want to make changes. 
 
 ## Building from Source
 1. Make sure you have a C compiler, git, CMake, and any libraries raylib needs installed.
