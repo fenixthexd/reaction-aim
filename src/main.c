@@ -113,6 +113,7 @@ int main(int argc, char *argv[])
                 game.enemy.position,
                 Vector2Scale(game.enemy.direction, game.enemy.speed * delta_time)
             );
+            game.enemy.lifetime += delta_time;
 
             if (Vector2Distance(game.enemy.position, center_position) < KILL_RADIUS)
             {
@@ -131,10 +132,6 @@ int main(int argc, char *argv[])
 
                 PlaySound(hit_sfx);
                 current_shake += SHAKE_BASE_STRENGTH + (game.streaks * SHAKE_SCALE_STRENGTH);
-            }
-            else
-            {
-                game.enemy.lifetime += delta_time;
             }
         }
 
