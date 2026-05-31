@@ -20,7 +20,7 @@
 #define MAX_SPAWN_TIME 5.0f
 
 #define STREAK_ROW_SIZE 10
-#define KILL_RADIUS 5
+#define KILL_RADIUS 8
 
 #define SHAKE_BASE_STRENGTH 1.5f
 #define SHAKE_SCALE_STRENGTH 0.1f
