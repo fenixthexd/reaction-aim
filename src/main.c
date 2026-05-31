@@ -86,6 +86,11 @@ int main(int argc, char *argv[])
     GameState game;
     reset_game(&game, true);
 
+    Camera2D camera = {0};
+    camera.zoom = 1.0f;
+
+    float current_shake = 0.0f;
+
     while (!WindowShouldClose()) {
         float delta_time = GetFrameTime();
 
@@ -123,6 +128,7 @@ int main(int argc, char *argv[])
                 reset_game(&game, false);
 
                 PlaySound(hit_sfx);
+                current_shake += SHAKE_BASE_STRENGTH + (game.streaks * SHAKE_SCALE_STRENGTH);
             }
             else
             {
@@ -130,9 +136,14 @@ int main(int argc, char *argv[])
             }
         }
 
-        BeginDrawing();
+        current_shake = fmaxf(0, current_shake - SHAKE_DECAY * delta_time);
+        camera.offset.x = GetRandomValue(-1, 1) * current_shake;
+        camera.offset.y = GetRandomValue(-1, 1) * current_shake;
 
+        BeginDrawing();
         ClearBackground(BLACK);
+
+        BeginMode2D(camera);
 
         if (game.enemy.spawned) {
             DrawCircle(game.enemy.position.x, game.enemy.position.y, ENEMY_RADIUS, WHITE);
@@ -157,6 +168,7 @@ int main(int argc, char *argv[])
         }
         DrawText(TextFormat("%04d", game.score), 10, 10, 24, WHITE);
 
+        EndMode2D();
         EndDrawing();
 
         game.elapsed_time += delta_time;
