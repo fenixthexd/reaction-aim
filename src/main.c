@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
     camera.zoom = 1.0f;
 
     float current_shake = 0.0f;
+    float current_flash = 0.0f;
 
     while (!WindowShouldClose()) {
         float delta_time = GetFrameTime();
@@ -118,6 +119,7 @@ int main(int argc, char *argv[])
                 reset_game(&game, true);
 
                 PlaySound(over_sfx);
+                current_flash = 1.0f;
             }
             else if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)
                 && CheckCollisionCircleLine(game.enemy.position, ENEMY_COL_RADIUS, center_position, laser_end))
@@ -169,6 +171,10 @@ int main(int argc, char *argv[])
         DrawText(TextFormat("%04d", game.score), 10, 10, 24, WHITE);
 
         EndMode2D();
+
+        current_flash = fmaxf(0, current_flash - FLASH_DECAY * delta_time);
+        DrawRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, Fade(WHITE, current_flash));
+
         EndDrawing();
 
         game.elapsed_time += delta_time;

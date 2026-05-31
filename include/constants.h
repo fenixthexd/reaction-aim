@@ -26,4 +26,6 @@
 #define SHAKE_SCALE_STRENGTH 0.1f
 #define SHAKE_DECAY 3.0f
 
+#define FLASH_DECAY 2.5f
+
 #endif
