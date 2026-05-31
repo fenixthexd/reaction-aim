@@ -74,7 +74,8 @@ int calculate_score(GameState *game)
 int main(int argc, char *argv[])
 {
     ChangeDirectory(GetApplicationDirectory());
-    
+    SetTargetFPS(120);
+
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Reaction Aim");
     InitAudioDevice();
 
