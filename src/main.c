@@ -1,5 +1,6 @@
 // -- Imports --
 #include "constants.h"
+#include "savefile.h"
 
 #include <raylib.h>
 #include <raymath.h>
@@ -87,6 +88,8 @@ int main(int argc, char *argv[])
     GameState game;
     reset_game(&game, true);
 
+    int high_score = LoadHighScore(SAVEFILE_NAME);
+
     Camera2D camera = {0};
     camera.zoom = 1.0f;
 
@@ -118,6 +121,12 @@ int main(int argc, char *argv[])
 
             if (Vector2Distance(game.enemy.position, center_position) < KILL_RADIUS)
             {
+                if (game.score > high_score)
+                {
+                    high_score = game.score;
+                    SaveHighScore(SAVEFILE_NAME, high_score);
+                }
+
                 reset_game(&game, true);
 
                 PlaySound(over_sfx);
@@ -168,7 +177,9 @@ int main(int argc, char *argv[])
                 ORANGE
             );
         }
+
         DrawText(TextFormat("%04d", game.score), 10, 10, 24, WHITE);
+        DrawText(TextFormat("BEST: %04d", high_score), 10, WINDOW_HEIGHT - 30, 20, DARKGRAY);
 
         EndMode2D();
 

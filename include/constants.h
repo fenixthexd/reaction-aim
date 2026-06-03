@@ -5,6 +5,8 @@
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 
+#define SAVEFILE_NAME "save.dat"
+
 #define LASER_LENGTH 800
 
 #define ENEMY_RADIUS 4
