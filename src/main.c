@@ -67,7 +67,7 @@ int calculate_score(GameState *game)
     float speed_multiplier = game->enemy.speed / 120.0;
 
     int total_bonus = (int)floor(BASE_SCORE_GAIN * time_multiplier * speed_multiplier);
-    
+
     return BASE_SCORE_GAIN + total_bonus;
 }
 
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
             laser_end.y,
             RED
         );
-        
+
         for (int i = 0; i < game.streaks; i++)
         {
             DrawRectangle(
