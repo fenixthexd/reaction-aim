@@ -145,9 +145,11 @@ int main(int argc, char *argv[])
 
         BeginMode2D(camera);
 
-        if (game.enemy.spawned) {
+        if (game.enemy.spawned)
+        {
             DrawCircle(game.enemy.position.x, game.enemy.position.y, ENEMY_RADIUS, WHITE);
         }
+        
         DrawLine(
             center_position.x,
             center_position.y,
