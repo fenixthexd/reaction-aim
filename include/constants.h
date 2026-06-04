@@ -13,12 +13,12 @@
 #define ENEMY_COL_RADIUS 6
 
 #define ENEMY_START_SPEED 90.0f
-#define ENEMY_SPEED_GAIN 18.0f
+#define ENEMY_SPEED_GAIN 15.0f
 
 #define BASE_SCORE_GAIN 100
-#define MAX_SCORE_TIME 2.0f
+#define MAX_SCORE_TIME 2.2f
 
-#define MIN_SPAWN_TIME 1.0f
+#define MIN_SPAWN_TIME 0.8f
 #define MAX_SPAWN_TIME 5.0f
 
 #define STREAK_ROW_SIZE 10
