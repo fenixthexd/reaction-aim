@@ -5,17 +5,20 @@ Reaction Aim is a minimalist arcade game and reaction trainer made with raylib. 
 You can download pre-built binaries from the [itch.io page](https://fenixthexd.itch.io/reaction-aim). Alternatively, you can build it yourself if you want to make changes. 
 
 ## Building from Source
-1. Make sure you have a C compiler, git, CMake, and any libraries raylib needs installed.
+1. Ensure you have a C compiler, git, CMake, and any raylib dependencies installed.
 2. Clone this repo or [download it](https://github.com/fenixthexd/reaction-aim/archive/refs/heads/main.zip).
 ```
 git clone https://github.com/fenixthexd/reaction-aim.git
 ```
-3. Initialize the project with CMake.
+3. Configure the CMake project.
 ```
-cmake -S . -B build
+cmake -B build -DCMAKE_BUILD_TYPE=Release
 ```
 4. Compile the program.
 ```
 cmake --build build
 ```
-5. Finally, run the program found in `build/`.
+5. Finally, run the compiled program at `build/`.
+```
+./build/reaction_aim
+```
