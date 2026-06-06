@@ -93,6 +93,7 @@ int main(int argc, char *argv[])
     Camera2D camera = {0};
     camera.zoom = 1.0f;
 
+    bool shake_enabled = true;
     float current_shake = 0.0f;
     float current_flash = 0.0f;
 
@@ -149,10 +150,21 @@ int main(int argc, char *argv[])
         {
             reset_game(&game, true);
         }
+        if (IsKeyPressed(KEY_T))
+        {
+            shake_enabled = !shake_enabled;
+        }
 
         current_shake = fmaxf(0, current_shake - SHAKE_DECAY * delta_time);
-        camera.offset.x = GetRandomValue(-1, 1) * current_shake;
-        camera.offset.y = GetRandomValue(-1, 1) * current_shake;
+        if (shake_enabled)
+        {
+            camera.offset.x = GetRandomValue(-1, 1) * current_shake;
+            camera.offset.y = GetRandomValue(-1, 1) * current_shake;
+        }
+        else
+        {
+            camera.offset = Vector2Zero();
+        }
 
         BeginDrawing();
         ClearBackground(BLACK);
