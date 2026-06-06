@@ -145,6 +145,11 @@ int main(int argc, char *argv[])
             }
         }
 
+        if (IsKeyPressed(KEY_R))
+        {
+            reset_game(&game, true);
+        }
+
         current_shake = fmaxf(0, current_shake - SHAKE_DECAY * delta_time);
         camera.offset.x = GetRandomValue(-1, 1) * current_shake;
         camera.offset.y = GetRandomValue(-1, 1) * current_shake;
